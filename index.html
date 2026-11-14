@@ -261,22 +261,22 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    /* Estilo igualzinho ao da imagem que você mandou (Player Compacto do YouTube) */
+    /* Player do YouTube Grande e Confortável para Clicar */
     .yt-player-box {
       width: 100%;
       background: rgba(36, 12, 26, 0.94);
-      border: 1px solid rgba(255, 133, 192, 0.4);
-      border-radius: 18px;
-      padding: 10px 14px 12px 14px;
+      border: 2px solid rgba(255, 133, 192, 0.5);
+      border-radius: 20px;
+      padding: 14px 16px 16px 16px;
       text-align: center;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     }
 
     .yt-player-title {
-      font-size: 0.88rem;
-      font-weight: 600;
+      font-size: 1rem;
+      font-weight: 700;
       color: #ff85c0;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -285,11 +285,11 @@
 
     .yt-iframe-container {
       width: 100%;
-      height: 74px;
+      height: 180px; /* Aumentado bastante para ficar super fácil de tocar no play */
       border-radius: 14px;
       overflow: hidden;
       background: #000;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .yt-iframe-container iframe {
@@ -407,7 +407,7 @@
         <button type="button" class="ctrl-btn" id="btn-right">▶</button>
         <button type="button" class="ctrl-btn" id="btn-up">▲</button>
       </div>
-      <button type="button" class="ctrl-btn shoot-btn" id="btn-shoot">🎵 ATIRAR</button>
+      <button type="button" class="ctrl-btn shoot-btn" id="btn-shoot">💖 ATIRAR</button>
     </div>
   </div>
 
@@ -418,7 +418,7 @@
     <p class="tap-hint">Toque na carta girando para abrir ✨</p>
   </div>
 
-  <!-- Declaração Final com as 2 Fotos e os Players do YouTube Estilo a Imagem -->
+  <!-- Declaração Final com as 2 Fotos e os Players do YouTube Grandões -->
   <div id="declaration-modal">
     <div class="letter-wrapper">
 
@@ -471,11 +471,6 @@
   <script src="https://www.youtube.com/iframe_api"></script>
 
   <script>
-    // IDs extraídos dos links:
-    // Jogo: I0e7Ugl0FRo
-    // Declaração 1: vaXCSYva2FM
-    // Declaração 2: Q4Sn5hOewbs
-
     let gamePlayer = null;
     let wantGameMusic = false;
 
@@ -881,7 +876,7 @@
       }
     }
 
-    // === Abrir Carta e Inserir os Players do YouTube na Declaração ===
+    // === Abrir Carta e Inserir os Players Grandes do YouTube ===
     let heartsStarted = false;
 
     function openLetter() {
@@ -889,13 +884,13 @@
       document.getElementById('envelope-overlay').style.display = 'none';
       document.getElementById('declaration-modal').style.display = 'flex';
 
-      // Insere os iframes do YouTube diretamente nas caixinhas de player da declaração
+      // Insere os iframes com controles completos e autoplay ativado
       document.getElementById('yt-dec1-slot').innerHTML = `
-        <iframe src="https://www.youtube.com/embed/vaXCSYva2FM?autoplay=1&loop=1&playlist=vaXCSYva2FM&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/vaXCSYva2FM?autoplay=1&loop=1&playlist=vaXCSYva2FM&controls=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       `;
 
       document.getElementById('yt-dec2-slot').innerHTML = `
-        <iframe src="https://www.youtube.com/embed/Q4Sn5hOewbs?autoplay=1&loop=1&playlist=Q4Sn5hOewbs&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/Q4Sn5hOewbs?autoplay=1&loop=1&playlist=Q4Sn5hOewbs&controls=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       `;
 
       if (!heartsStarted) {
