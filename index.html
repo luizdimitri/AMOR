@@ -78,54 +78,6 @@
       transform: scale(0.95);
     }
 
-    /* Player estilo YouTube compacto */
-    #player-container {
-      display: none;
-      position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 24px);
-      max-width: 520px;
-      z-index: 90;
-    }
-
-    .yt-music-box {
-      width: 100%;
-      background: rgba(36, 12, 26, 0.94);
-      border: 1px solid rgba(255, 133, 192, 0.35);
-      border-radius: 18px;
-      padding: 8px 12px 10px 12px;
-      text-align: center;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    }
-
-    .yt-music-title {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: #ff85c0;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .yt-iframe-wrapper {
-      width: 100%;
-      height: 74px;
-      border-radius: 14px;
-      overflow: hidden;
-      background: #000;
-    }
-
-    .yt-iframe-wrapper iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-    }
-
     /* Área do Jogo */
     #game-wrapper {
       display: none;
@@ -133,7 +85,6 @@
       align-items: center;
       width: 100%;
       max-width: 800px;
-      margin-top: 112px;
       user-select: none;
       -webkit-user-select: none;
     }
@@ -268,9 +219,116 @@
       background: radial-gradient(circle at top, #591137, #1c0411);
       z-index: 85;
       overflow-y: auto;
-      padding: 125px 16px 30px 16px;
+      padding: 22px 16px 36px 16px;
       align-items: flex-start;
       justify-content: center;
+    }
+
+    .letter-wrapper {
+      width: 100%;
+      max-width: 520px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      animation: fadeInScale 0.8s ease;
+    }
+
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Player compacto estilo Spotify/YouTube que toca direto na página sem abrir YouTube */
+    .music-player-box {
+      width: 100%;
+      background: rgba(36, 12, 26, 0.94);
+      border: 1px solid rgba(255, 133, 192, 0.4);
+      border-radius: 18px;
+      padding: 12px 16px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .music-player-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #ff85c0;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .custom-audio-bar {
+      background: #0d0d0d;
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .play-pause-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #ff2a85;
+      border: none;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .track-info {
+      flex: 1;
+      text-align: left;
+      overflow: hidden;
+    }
+
+    .track-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-artist {
+      font-size: 0.75rem;
+      color: #bbb;
+      margin-bottom: 5px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 5px;
+      background: #333;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .progress-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: #ff2a85;
+      transition: width 0.1s linear;
+    }
+
+    .time-text {
+      font-size: 0.72rem;
+      color: #ccc;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
     }
 
     .letter-card {
@@ -278,18 +336,10 @@
       backdrop-filter: blur(14px);
       border: 2px solid #ff85c0;
       border-radius: 24px;
-      max-width: 520px;
       width: 100%;
-      margin: auto;
       padding: 24px;
       text-align: center;
       box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
-      animation: fadeInScale 0.8s ease;
-    }
-
-    @keyframes fadeInScale {
-      from { opacity: 0; transform: scale(0.85); }
-      to { opacity: 1; transform: scale(1); }
     }
 
     .photo-frame {
@@ -319,13 +369,21 @@
 
     .letter-text {
       font-size: 1.02rem;
-      line-height: 1.75;
+      line-height: 1.78;
       color: #fff0f6;
       text-align: center;
     }
 
     .letter-text strong {
       color: #ff85c0;
+    }
+
+    .endearments {
+      margin-top: 16px;
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: #ff99cc;
+      line-height: 1.6;
     }
 
     /* Corações flutuando no fundo */
@@ -347,13 +405,10 @@
 </head>
 <body>
 
-  <!-- Player compacto do YouTube -->
-  <div id="player-container">
-    <div class="yt-music-box">
-      <div class="yt-music-title">🎵 Tocando: Melim - Ouvi Dizer</div>
-      <div class="yt-iframe-wrapper" id="yt-slot"></div>
-    </div>
-  </div>
+  <!-- Áudio local da música "Ouvi Dizer - Melim" (arquivo musica.mp3 no GitHub) -->
+  <audio id="romantic-music" preload="auto" loop>
+    <source src="musica.mp3" type="audio/mpeg">
+  </audio>
 
   <!-- Tela Inicial -->
   <div id="start-screen">
@@ -389,25 +444,121 @@
     <p class="tap-hint">Toque na carta girando para abrir ✨</p>
   </div>
 
-  <!-- Declaração Final com a Foto -->
+  <!-- Declaração Final com a Foto e o Player Direto na Tela -->
   <div id="declaration-modal">
-    <div class="letter-card">
-      <div class="photo-frame">
-        <img src="foto.jpg" alt="Minha Princesa">
+    <div class="letter-wrapper">
+
+      <!-- Player compacto que toca direto na página sem abrir o YouTube -->
+      <div class="music-player-box">
+        <div class="music-player-title">🎵 Tocando: Melim - Ouvi Dizer</div>
+        <div class="custom-audio-bar">
+          <button type="button" class="play-pause-btn" id="play-pause-btn">❚❚</button>
+          <div class="track-info">
+            <div class="track-name">Ouvi Dizer</div>
+            <div class="track-artist">Melim</div>
+            <div class="progress-bar-bg" id="progress-container">
+              <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+          </div>
+          <div class="time-text" id="time-display">0:00</div>
+        </div>
       </div>
-      <h2>Eu Te Amo Muito! 💖</h2>
-      <p class="letter-text">
-        Meu amor, eu sou completamente apaixonado por você e completamente admirado por cada detalhe da sua beleza. Você é a mulher mais linda desse mundo inteiro — o seu sorriso ilumina tudo ao meu redor, os seus cachos são perfeitos e o seu olhar tem um brilho único que me encanta todos os dias.<br><br>
-        Além de ser essa mulher maravilhosamente linda por fora, eu admiro profundamente a sua <strong>fé</strong> e a sua <strong>força</strong>. Ver o jeito como você confia em Deus, enfrenta qualquer desafio de cabeça erguida e nunca desiste me faz ter ainda mais orgulho e admiração por você.<br><br>
-        Você é linda, forte, abençoada e o maior presente da minha vida. <strong>Eu te amo hoje e sempre!</strong> 💕
-      </p>
+
+      <div class="letter-card">
+        <div class="photo-frame">
+          <img src="foto.jpg" alt="Minha Princesa">
+        </div>
+        <h2>Eu Te Amo Muito! 💖</h2>
+        <p class="letter-text">
+          <strong>Minha princesa,</strong> eu sou completamente apaixonado por você e completamente admirado por cada detalhe da sua beleza. Você é a mulher mais linda desse mundo inteiro — o seu sorriso ilumina tudo ao meu redor, os seus cachos são perfeitos e o seu olhar tem um brilho único que me encanta todos os dias.<br><br>
+          Além de ser essa mulher maravilhosamente linda por fora, eu admiro profundamente a sua <strong>fé</strong> e a sua <strong>força</strong>. Ver o jeito como você confia em Deus, enfrenta qualquer desafio de cabeça erguida e nunca desiste me faz ter ainda mais orgulho e admiração por você.<br><br>
+          Cada segundo pensando em você me faz ter certeza de que Deus caprichou em cada traço seu. A sua beleza me hipnotiza, o seu jeito doce me conquista e essa sua força gigante me inspira todos os dias a querer te fazer a mulher mais feliz do mundo.<br><br>
+          Você é linda, forte, abençoada e o maior presente da minha vida. <strong>Eu te amo hoje e sempre!</strong> 💕
+        </p>
+        <div class="endearments">
+          Minha neném, minha pequenina, meu amor, amor, vida 💖✨
+        </div>
+      </div>
+
     </div>
   </div>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
+    const romanticMusic = document.getElementById('romantic-music');
 
+    // === Áudio de Suspense Dramático para o Jogo (Web Audio API - sem precisar de arquivo externo) ===
+    let suspenseCtx = null;
+    let suspenseInterval = null;
+
+    function startSuspenseAudio() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        suspenseCtx = new AudioContext();
+        if (suspenseCtx.state === 'suspended') {
+          suspenseCtx.resume();
+        }
+
+        // Acorde grave dramático de tensão contínua + batida de coração/suspense
+        const droneOsc1 = suspenseCtx.createOscillator();
+        const droneOsc2 = suspenseCtx.createOscillator();
+        const droneGain = suspenseCtx.createGain();
+        const filter = suspenseCtx.createBiquadFilter();
+
+        droneOsc1.type = 'sawtooth';
+        droneOsc1.frequency.value = 55; // Lá grave (A1)
+        droneOsc2.type = 'triangle';
+        droneOsc2.frequency.value = 58.27; // Lá# grave (dissonância dramática)
+
+        filter.type = 'lowpass';
+        filter.frequency.value = 220;
+
+        droneGain.gain.value = 0.14;
+
+        droneOsc1.connect(filter);
+        droneOsc2.connect(filter);
+        filter.connect(droneGain);
+        droneGain.connect(suspenseCtx.destination);
+
+        droneOsc1.start();
+        droneOsc2.start();
+
+        // Batida dramática de suspense a cada 1.1 segundo
+        suspenseInterval = setInterval(() => {
+          if (!suspenseCtx || suspenseCtx.state !== 'running') return;
+          const now = suspenseCtx.currentTime;
+          const pulseOsc = suspenseCtx.createOscillator();
+          const pulseGain = suspenseCtx.createGain();
+
+          pulseOsc.type = 'sine';
+          pulseOsc.frequency.setValueAtTime(95, now);
+          pulseOsc.frequency.exponentialRampToValueAtTime(36, now + 0.45);
+
+          pulseGain.gain.setValueAtTime(0.28, now);
+          pulseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+          pulseOsc.connect(pulseGain);
+          pulseGain.connect(suspenseCtx.destination);
+
+          pulseOsc.start(now);
+          pulseOsc.stop(now + 0.52);
+        }, 1100);
+      } catch (e) {}
+    }
+
+    function stopSuspenseAudio() {
+      if (suspenseInterval) {
+        clearInterval(suspenseInterval);
+        suspenseInterval = null;
+      }
+      if (suspenseCtx) {
+        suspenseCtx.close().catch(() => {});
+        suspenseCtx = null;
+      }
+    }
+
+    // === Lógica do Jogo ===
     let gameRunning = false;
     let currentLevel = 1;
     const maxLevels = 5;
@@ -415,7 +566,6 @@
 
     const groundY = 350;
 
-    // Boneca com roupa rosa e pistola rosa
     const player = {
       x: 80,
       y: groundY - 70,
@@ -442,26 +592,16 @@
     function startGame() {
       if (gameRunning) return;
       document.getElementById('start-screen').style.display = 'none';
-      document.getElementById('player-container').style.display = 'block';
       document.getElementById('game-wrapper').style.display = 'flex';
 
-      const ytSlot = document.getElementById('yt-slot');
-      if (!ytSlot.innerHTML.trim()) {
-        ytSlot.innerHTML = `
-          <iframe
-            src="https://www.youtube.com/embed/y_6aSG2yfe8?autoplay=1&loop=1&playlist=y_6aSG2yfe8&controls=1&modestbranding=1&rel=0"
-            allow="autoplay; encrypted-media"
-            allowfullscreen>
-          </iframe>
-        `;
-      }
+      // Inicia o som dramático de suspense durante o jogo
+      startSuspenseAudio();
 
       startLevel(1);
       gameRunning = true;
       requestAnimationFrame(gameLoop);
     }
 
-    // Garante que o botão funcione tanto no toque do celular quanto no clique do mouse
     const startBtn = document.getElementById('start-btn');
     startBtn.addEventListener('click', startGame);
     startBtn.addEventListener('touchend', function(e) {
@@ -621,6 +761,7 @@
           }, 1200);
         } else {
           gameRunning = false;
+          stopSuspenseAudio();
           document.getElementById('envelope-overlay').style.display = 'flex';
         }
       }
@@ -645,27 +786,23 @@
       const { x, y, w, h, facing } = player;
       ctx.save();
 
-      // Cabelo cacheado escuro
       ctx.fillStyle = '#1b0f14';
       ctx.beginPath();
       ctx.arc(x + w / 2, y + 16, 17, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillRect(x + 6, y + 14, 32, 24);
 
-      // Rosto
       ctx.fillStyle = '#e0a988';
       ctx.beginPath();
       ctx.arc(x + w / 2, y + 17, 12, 0, Math.PI * 2);
       ctx.fill();
 
-      // Olhos
       ctx.fillStyle = '#111';
       const eyeOffset = facing === 1 ? 4 : -4;
       ctx.beginPath();
       ctx.arc(x + w / 2 + eyeOffset, y + 16, 2, 0, Math.PI * 2);
       ctx.fill();
 
-      // Roupa Rosa
       ctx.fillStyle = '#ff2a85';
       ctx.beginPath();
       ctx.moveTo(x + 12, y + 29);
@@ -678,17 +815,14 @@
       ctx.fillStyle = '#ff99cc';
       ctx.fillRect(x + 13, y + 39, 18, 4);
 
-      // Pernas
       ctx.fillStyle = '#e0a988';
       ctx.fillRect(x + 14, y + 54, 6, 16);
       ctx.fillRect(x + 24, y + 54, 6, 16);
 
-      // Sapatinho Rosa
       ctx.fillStyle = '#ff69b4';
       ctx.fillRect(x + 12, y + 66, 9, 5);
       ctx.fillRect(x + 23, y + 66, 9, 5);
 
-      // Pistola Rosa
       ctx.fillStyle = '#ff69b4';
       ctx.strokeStyle = '#fff';
       ctx.lineWidth = 1.5;
@@ -776,10 +910,24 @@
       }
     }
 
+    // === Abrir Carta e Tocar "Ouvi Dizer - Melim" direto no Player ===
     let heartsStarted = false;
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const progressFill = document.getElementById('progress-fill');
+    const timeDisplay = document.getElementById('time-display');
+
     function openLetter() {
+      stopSuspenseAudio();
       document.getElementById('envelope-overlay').style.display = 'none';
       document.getElementById('declaration-modal').style.display = 'flex';
+
+      romanticMusic.volume = 0.85;
+      romanticMusic.play().then(() => {
+        playPauseBtn.textContent = '❚❚';
+      }).catch(() => {
+        playPauseBtn.textContent = '▶';
+      });
+
       if (!heartsStarted) {
         heartsStarted = true;
         setInterval(() => {
@@ -793,6 +941,33 @@
         }, 450);
       }
     }
+
+    playPauseBtn.addEventListener('click', () => {
+      if (romanticMusic.paused) {
+        romanticMusic.play();
+        playPauseBtn.textContent = '❚❚';
+      } else {
+        romanticMusic.pause();
+        playPauseBtn.textContent = '▶';
+      }
+    });
+
+    romanticMusic.addEventListener('timeupdate', () => {
+      if (romanticMusic.duration) {
+        const pct = (romanticMusic.currentTime / romanticMusic.duration) * 100;
+        progressFill.style.width = pct + '%';
+        const mins = Math.floor(romanticMusic.currentTime / 60);
+        const secs = Math.floor(romanticMusic.currentTime % 60).toString().padStart(2, '0');
+        timeDisplay.textContent = `${mins}:${secs}`;
+      }
+    });
+
+    document.getElementById('progress-container').addEventListener('click', (e) => {
+      if (!romanticMusic.duration) return;
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      romanticMusic.currentTime = (clickX / rect.width) * romanticMusic.duration;
+    });
 
     const letterBtn = document.getElementById('letter-btn');
     letterBtn.addEventListener('click', openLetter);
@@ -815,21 +990,3 @@
     });
 
     function bindTouch(id, keyName) {
-      const el = document.getElementById(id);
-      el.addEventListener('touchstart', e => { e.preventDefault(); keys[keyName] = true; });
-      el.addEventListener('touchend', e => { e.preventDefault(); keys[keyName] = false; });
-      el.addEventListener('mousedown', () => keys[keyName] = true);
-      el.addEventListener('mouseup', () => keys[keyName] = false);
-      el.addEventListener('mouseleave', () => keys[keyName] = false);
-    }
-
-    bindTouch('btn-left', 'left');
-    bindTouch('btn-right', 'right');
-    bindTouch('btn-up', 'up');
-
-    const shootBtn = document.getElementById('btn-shoot');
-    shootBtn.addEventListener('touchstart', e => { e.preventDefault(); shootHeart(); });
-    shootBtn.addEventListener('click', shootHeart);
-  </script>
-</body>
-</html>
