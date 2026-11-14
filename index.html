@@ -79,7 +79,7 @@
       transform: scale(0.95);
     }
 
-    /* Players ocultos do YouTube que tocam em segundo plano sem abrir o app do YouTube */
+    /* Players ocultos do YouTube que rodam em segundo plano */
     .hidden-yt-players {
       position: fixed;
       top: -9999px;
@@ -123,7 +123,7 @@
       font-size: 0.85rem;
     }
 
-    #suspense-toggle-btn {
+    #game-music-toggle {
       background: rgba(255, 105, 180, 0.25);
       border: 1px solid #ff85c0;
       color: #fff;
@@ -261,7 +261,7 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    /* Player compacto estilo YouTube que toca direto sem sair do site */
+    /* Players de Música Estilizados */
     .music-player-box {
       width: 100%;
       background: rgba(36, 12, 26, 0.94);
@@ -334,22 +334,6 @@
       font-size: 0.75rem;
       color: #bbb;
       margin-bottom: 5px;
-    }
-
-    .progress-bar-bg {
-      width: 100%;
-      height: 5px;
-      background: #333;
-      border-radius: 4px;
-      overflow: hidden;
-      cursor: pointer;
-    }
-
-    .progress-bar-fill {
-      width: 0%;
-      height: 100%;
-      background: #ff2a85;
-      transition: width 0.2s linear;
     }
 
     .yt-badge {
@@ -443,11 +427,11 @@
 </head>
 <body>
 
-  <!-- Players da API oficial do YouTube (tocam direto na página sem abrir o YouTube) -->
+  <!-- Players do YouTube embutidos para cada parte do site -->
   <div class="hidden-yt-players">
-    <div id="yt-suspense-player"></div>
-    <div id="yt-melim-player"></div>
-    <div id="yt-nadson-player"></div>
+    <div id="yt-game-player"></div>
+    <div id="yt-dec1-player"></div>
+    <div id="yt-dec2-player"></div>
   </div>
 
   <!-- Tela Inicial -->
@@ -462,7 +446,7 @@
     <div id="hud">
       <div>Fase: <span class="hud-badge" id="level-display">1 / 5</span></div>
       <div>Zumbis: <span id="zombies-display">0/0</span></div>
-      <button type="button" id="suspense-toggle-btn" onclick="toggleSuspenseMusic()">🔊 Som</button>
+      <button type="button" id="game-music-toggle" onclick="toggleGameMusic()">🔊 Som do Jogo</button>
     </div>
 
     <canvas id="gameCanvas" width="800" height="450"></canvas>
@@ -485,21 +469,18 @@
     <p class="tap-hint">Toque na carta girando para abrir ✨</p>
   </div>
 
-  <!-- Declaração Final com as 2 Fotos e os 2 Players do YouTube Direto na Tela -->
+  <!-- Declaração Final com as 2 Fotos e as Músicas correspondentes -->
   <div id="declaration-modal">
     <div class="letter-wrapper">
 
-      <!-- Player 1: Melim - Ouvi Dizer (Foto 1) -->
+      <!-- Player 1: Música da Primeira Declaração (Link 2: vaXCSYva2FM) -->
       <div class="music-player-box">
-        <div class="music-player-title">🎵 Tocando: Melim - Ouvi Dizer</div>
+        <div class="music-player-title">🎵 Tocando: Música Especial 1</div>
         <div class="custom-audio-bar">
-          <button type="button" class="play-pause-btn" id="play-pause-btn" onclick="toggleMelimMusic()">▶</button>
+          <button type="button" class="play-pause-btn" id="dec1-play-btn" onclick="toggleDec1Music()">▶</button>
           <div class="track-info">
-            <div class="track-name">Ouvi Dizer</div>
-            <div class="track-artist">Melim</div>
-            <div class="progress-bar-bg" id="progress-container" onclick="seekMelim(event)">
-              <div class="progress-bar-fill" id="progress-fill"></div>
-            </div>
+            <div class="track-name">Primeira Declaração</div>
+            <div class="track-artist">Trilha Sonora Especial</div>
           </div>
           <div class="yt-badge">▶ YouTube</div>
         </div>
@@ -520,17 +501,14 @@
 
         <div class="divider-hearts">💕 💖 💕</div>
 
-        <!-- Player 2: Nadson O Ferinha - Assalto Perigoso (Foto 2) -->
+        <!-- Player 2: Música da Segunda Declaração (Link 3: Q4Sn5hOewbs) -->
         <div class="music-player-box inner-player">
-          <div class="music-player-title">🎵 Música da Foto: Nadson O Ferinha - Assalto Perigoso</div>
+          <div class="music-player-title">🎵 Tocando: Música da Foto 2</div>
           <div class="custom-audio-bar">
-            <button type="button" class="play-pause-btn" id="nadson-play-btn" onclick="toggleNadsonMusic()">▶</button>
+            <button type="button" class="play-pause-btn" id="dec2-play-btn" onclick="toggleDec2Music()">▶</button>
             <div class="track-info">
-              <div class="track-name">Assalto Perigoso</div>
-              <div class="track-artist">Nadson O Ferinha</div>
-              <div class="progress-bar-bg" id="nadson-progress-container" onclick="seekNadson(event)">
-                <div class="progress-bar-fill" id="nadson-progress-fill"></div>
-              </div>
+              <div class="track-name">Segunda Declaração</div>
+              <div class="track-artist">Trilha Sonora Especial</div>
             </div>
             <div class="yt-badge">▶ YouTube</div>
           </div>
@@ -558,225 +536,126 @@
   <script src="https://www.youtube.com/iframe_api"></script>
 
   <script>
-    // === Controle dos Players do YouTube Direto no Site ===
-    let suspensePlayer = null;
-    let melimPlayer = null;
-    let nadsonPlayer = null;
-    let wantSuspense = false;
-    let wantMelim = false;
+    // IDs extraídos dos seus links do YouTube:
+    // Jogo: I0e7Ugl0FRo (https://youtu.be/I0e7Ugl0FRo)
+    // Declaração 1: vaXCSYva2FM (https://youtu.be/vaXCSYva2FM)
+    // Declaração 2: Q4Sn5hOewbs (https://youtu.be/Q4Sn5hOewbs)
+
+    let gamePlayer = null;
+    let dec1Player = null;
+    let dec2Player = null;
+    let wantGameMusic = false;
 
     function onYouTubeIframeAPIReady() {
-      // 1) Dramatic Music Sound Effect
-      suspensePlayer = new YT.Player('yt-suspense-player', {
+      // 1) Player do Jogo
+      gamePlayer = new YT.Player('yt-game-player', {
         height: '200',
         width: '200',
-        videoId: 'd9uK_e1rN9s',
-        playerVars: {
-          autoplay: 0,
-          controls: 0,
-          loop: 1,
-          playlist: 'd9uK_e1rN9s',
-          playsinline: 1,
-          rel: 0
-        },
+        videoId: 'I0e7Ugl0FRo',
+        playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: 'I0e7Ugl0FRo', playsinline: 1, rel: 0 },
         events: {
           onReady: function(e) {
             e.target.setVolume(70);
-            if (wantSuspense) e.target.playVideo();
+            if (wantGameMusic) e.target.playVideo();
           }
         }
       });
 
-      // 2) Melim - Ouvi Dizer (ID oficial: y_6aSG2yfe8)
-      melimPlayer = new YT.Player('yt-melim-player', {
+      // 2) Player da Declaração 1
+      dec1Player = new YT.Player('yt-dec1-player', {
         height: '200',
         width: '200',
-        videoId: 'y_6aSG2yfe8',
-        playerVars: {
-          autoplay: 0,
-          controls: 0,
-          loop: 1,
-          playlist: 'y_6aSG2yfe8',
-          playsinline: 1,
-          rel: 0
-        },
+        videoId: 'vaXCSYva2FM',
+        playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: 'vaXCSYva2FM', playsinline: 1, rel: 0 },
         events: {
-          onReady: function(e) {
-            e.target.setVolume(100);
-            if (wantMelim) {
-              e.target.playVideo();
-              document.getElementById('play-pause-btn').textContent = '❚❚';
-            }
-          },
           onStateChange: function(e) {
-            const btn = document.getElementById('play-pause-btn');
-            if (e.data === YT.PlayerState.PLAYING) {
-              btn.textContent = '❚❚';
-            } else if (e.data === YT.PlayerState.PAUSED) {
-              btn.textContent = '▶';
-            }
+            const btn = document.getElementById('dec1-play-btn');
+            if (e.data === YT.PlayerState.PLAYING) btn.textContent = '❚❚';
+            else if (e.data === YT.PlayerState.PAUSED) btn.textContent = '▶';
           }
         }
       });
 
-      // 3) Nadson O Ferinha - Assalto Perigoso (ID oficial: R_95pW0M0bY)
-      nadsonPlayer = new YT.Player('yt-nadson-player', {
+      // 3) Player da Declaração 2
+      dec2Player = new YT.Player('yt-dec2-player', {
         height: '200',
         width: '200',
-        videoId: 'R_95pW0M0bY',
-        playerVars: {
-          autoplay: 0,
-          controls: 0,
-          loop: 1,
-          playlist: 'R_95pW0M0bY',
-          playsinline: 1,
-          rel: 0
-        },
+        videoId: 'Q4Sn5hOewbs',
+        playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: 'Q4Sn5hOewbs', playsinline: 1, rel: 0 },
         events: {
-          onReady: function(e) {
-            e.target.setVolume(100);
-          },
           onStateChange: function(e) {
-            const btn = document.getElementById('nadson-play-btn');
-            if (e.data === YT.PlayerState.PLAYING) {
-              btn.textContent = '❚❚';
-            } else if (e.data === YT.PlayerState.PAUSED) {
-              btn.textContent = '▶';
-            }
+            const btn = document.getElementById('dec2-play-btn');
+            if (e.data === YT.PlayerState.PLAYING) btn.textContent = '❚❚';
+            else if (e.data === YT.PlayerState.PAUSED) btn.textContent = '▶';
           }
         }
       });
     }
 
-    function playSuspenseYT() {
-      wantSuspense = true;
+    function playGameMusic() {
+      wantGameMusic = true;
       try {
-        if (suspensePlayer && typeof suspensePlayer.playVideo === 'function') {
-          suspensePlayer.playVideo();
+        if (gamePlayer && typeof gamePlayer.playVideo === 'function') {
+          gamePlayer.playVideo();
         }
       } catch (e) {}
     }
 
-    function stopSuspenseYT() {
-      wantSuspense = false;
+    function stopGameMusic() {
+      wantGameMusic = false;
       try {
-        if (suspensePlayer && typeof suspensePlayer.stopVideo === 'function') {
-          suspensePlayer.stopVideo();
+        if (gamePlayer && typeof gamePlayer.stopVideo === 'function') {
+          gamePlayer.stopVideo();
         }
       } catch (e) {}
     }
 
-    function toggleSuspenseMusic() {
-      const btn = document.getElementById('suspense-toggle-btn');
+    function toggleGameMusic() {
+      const btn = document.getElementById('game-music-toggle');
       try {
-        if (suspensePlayer && typeof suspensePlayer.getPlayerState === 'function') {
-          if (suspensePlayer.getPlayerState() === 1) {
-            suspensePlayer.pauseVideo();
+        if (gamePlayer && typeof gamePlayer.getPlayerState === 'function') {
+          if (gamePlayer.getPlayerState() === 1) {
+            gamePlayer.pauseVideo();
             btn.textContent = '🔇 Mudo';
           } else {
-            suspensePlayer.playVideo();
+            gamePlayer.playVideo();
             btn.textContent = '🔊 Som';
           }
         }
       } catch (e) {}
     }
 
-    function playMelimYT() {
-      wantMelim = true;
+    function toggleDec1Music() {
+      const btn = document.getElementById('dec1-play-btn');
       try {
-        if (nadsonPlayer && typeof nadsonPlayer.pauseVideo === 'function') {
-          nadsonPlayer.pauseVideo();
-        }
-        if (melimPlayer && typeof melimPlayer.playVideo === 'function') {
-          melimPlayer.playVideo();
-          document.getElementById('play-pause-btn').textContent = '❚❚';
-        }
-      } catch (e) {}
-    }
-
-    function toggleMelimMusic() {
-      const btn = document.getElementById('play-pause-btn');
-      try {
-        if (melimPlayer && typeof melimPlayer.getPlayerState === 'function') {
-          const state = melimPlayer.getPlayerState();
-          if (state === 1) {
-            melimPlayer.pauseVideo();
+        if (dec1Player && typeof dec1Player.getPlayerState === 'function') {
+          if (dec1Player.getPlayerState() === 1) {
+            dec1Player.pauseVideo();
             btn.textContent = '▶';
           } else {
-            if (nadsonPlayer && typeof nadsonPlayer.pauseVideo === 'function') {
-              nadsonPlayer.pauseVideo();
-            }
-            melimPlayer.playVideo();
+            if (dec2Player && typeof dec2Player.pauseVideo === 'function') dec2Player.pauseVideo();
+            dec1Player.playVideo();
             btn.textContent = '❚❚';
           }
         }
       } catch (e) {}
     }
 
-    function seekMelim(e) {
+    function toggleDec2Music() {
+      const btn = document.getElementById('dec2-play-btn');
       try {
-        if (melimPlayer && typeof melimPlayer.getDuration === 'function') {
-          const duration = melimPlayer.getDuration();
-          if (duration > 0) {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const pct = (e.clientX - rect.left) / rect.width;
-            melimPlayer.seekTo(pct * duration, true);
-          }
-        }
-      } catch (err) {}
-    }
-
-    function toggleNadsonMusic() {
-      const btn = document.getElementById('nadson-play-btn');
-      try {
-        if (nadsonPlayer && typeof nadsonPlayer.getPlayerState === 'function') {
-          const state = nadsonPlayer.getPlayerState();
-          if (state === 1) {
-            nadsonPlayer.pauseVideo();
+        if (dec2Player && typeof dec2Player.getPlayerState === 'function') {
+          if (dec2Player.getPlayerState() === 1) {
+            dec2Player.pauseVideo();
             btn.textContent = '▶';
           } else {
-            if (melimPlayer && typeof melimPlayer.pauseVideo === 'function') {
-              melimPlayer.pauseVideo();
-            }
-            nadsonPlayer.playVideo();
+            if (dec1Player && typeof dec1Player.pauseVideo === 'function') dec1Player.pauseVideo();
+            dec2Player.playVideo();
             btn.textContent = '❚❚';
           }
         }
       } catch (e) {}
     }
-
-    function seekNadson(e) {
-      try {
-        if (nadsonPlayer && typeof nadsonPlayer.getDuration === 'function') {
-          const duration = nadsonPlayer.getDuration();
-          if (duration > 0) {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const pct = (e.clientX - rect.left) / rect.width;
-            nadsonPlayer.seekTo(pct * duration, true);
-          }
-        }
-      } catch (err) {}
-    }
-
-    // Atualiza barras de progresso das duas músicas
-    setInterval(() => {
-      try {
-        if (melimPlayer && typeof melimPlayer.getCurrentTime === 'function' && melimPlayer.getPlayerState() === 1) {
-          const cur = melimPlayer.getCurrentTime();
-          const dur = melimPlayer.getDuration();
-          if (dur > 0) {
-            document.getElementById('progress-fill').style.width = ((cur / dur) * 100) + '%';
-          }
-        }
-        if (nadsonPlayer && typeof nadsonPlayer.getCurrentTime === 'function' && nadsonPlayer.getPlayerState() === 1) {
-          const curN = nadsonPlayer.getCurrentTime();
-          const durN = nadsonPlayer.getDuration();
-          if (durN > 0) {
-            document.getElementById('nadson-progress-fill').style.width = ((curN / durN) * 100) + '%';
-          }
-        }
-      } catch (e) {}
-    }, 500);
 
     // === Lógica do Jogo ===
     const canvas = document.getElementById('gameCanvas');
@@ -821,7 +700,7 @@
       gameRunning = true;
       requestAnimationFrame(gameLoop);
 
-      playSuspenseYT();
+      playGameMusic();
     }
 
     const startBtn = document.getElementById('start-btn');
@@ -982,7 +861,7 @@
           }, 1200);
         } else {
           gameRunning = false;
-          stopSuspenseYT();
+          stopGameMusic();
           document.getElementById('envelope-overlay').style.display = 'flex';
         }
       }
@@ -1131,15 +1010,20 @@
       }
     }
 
-    // === Abrir Carta ===
+    // === Abrir Carta e Tocar Primeira Música ===
     let heartsStarted = false;
 
     function openLetter() {
-      stopSuspenseYT();
+      stopGameMusic();
       document.getElementById('envelope-overlay').style.display = 'none';
       document.getElementById('declaration-modal').style.display = 'flex';
 
-      playMelimYT();
+      try {
+        if (dec1Player && typeof dec1Player.playVideo === 'function') {
+          dec1Player.playVideo();
+          document.getElementById('dec1-play-btn').textContent = '❚❚';
+        }
+      } catch (e) {}
 
       if (!heartsStarted) {
         heartsStarted = true;
