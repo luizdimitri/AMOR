@@ -261,7 +261,7 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    /* Player do YouTube Grande e Confortável para Clicar */
+    /* Player do YouTube grande e confortável */
     .yt-player-box {
       width: 100%;
       background: rgba(36, 12, 26, 0.94);
@@ -285,7 +285,7 @@
 
     .yt-iframe-container {
       width: 100%;
-      height: 180px; /* Aumentado bastante para ficar super fácil de tocar no play */
+      height: 180px;
       border-radius: 14px;
       overflow: hidden;
       background: #000;
@@ -418,7 +418,7 @@
     <p class="tap-hint">Toque na carta girando para abrir ✨</p>
   </div>
 
-  <!-- Declaração Final com as 2 Fotos e os Players do YouTube Grandões -->
+  <!-- Declaração Final com as 2 Fotos e os Players do YouTube (com autoplay ativado) -->
   <div id="declaration-modal">
     <div class="letter-wrapper">
 
@@ -876,7 +876,7 @@
       }
     }
 
-    // === Abrir Carta e Inserir os Players Grandes do YouTube ===
+    // === Abrir Carta e Tocar as Músicas Automaticamente com autoplay=1 ===
     let heartsStarted = false;
 
     function openLetter() {
@@ -884,7 +884,7 @@
       document.getElementById('envelope-overlay').style.display = 'none';
       document.getElementById('declaration-modal').style.display = 'flex';
 
-      // Insere os iframes com controles completos e autoplay ativado
+      // Insere os iframes já com autoplay ativado para tocarem sozinhos ao abrir
       document.getElementById('yt-dec1-slot').innerHTML = `
         <iframe src="https://www.youtube.com/embed/vaXCSYva2FM?autoplay=1&loop=1&playlist=vaXCSYva2FM&controls=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       `;
