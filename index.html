@@ -199,3 +199,637 @@
       align-items: center;
       justify-content: center;
       touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .ctrl-btn:active {
+      background: #ff2a85;
+    }
+
+    .shoot-btn {
+      width: 118px;
+      background: linear-gradient(135deg, #ff2a85, #ff69b4);
+      font-size: 1rem;
+    }
+
+    /* Tela da Carta Girando */
+    #envelope-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(24, 4, 15, 0.94);
+      backdrop-filter: blur(8px);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 80;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #envelope-overlay h2 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.5rem;
+      color: #ff99cc;
+      margin-bottom: 25px;
+    }
+
+    .spinning-letter {
+      font-size: 110px;
+      cursor: pointer;
+      animation: spinAndFloat 3s infinite ease-in-out;
+      filter: drop-shadow(0 0 25px rgba(255, 105, 180, 0.9));
+      touch-action: manipulation;
+    }
+
+    @keyframes spinAndFloat {
+      0% { transform: rotateY(0deg) translateY(0px); }
+      50% { transform: rotateY(180deg) translateY(-15px); }
+      100% { transform: rotateY(360deg) translateY(0px); }
+    }
+
+    .tap-hint {
+      margin-top: 20px;
+      color: #ffd6e7;
+      font-size: 1rem;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    /* Tela da Declaração Final */
+    #declaration-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, #591137, #1c0411);
+      z-index: 85;
+      overflow-y: auto;
+      padding: 125px 16px 30px 16px;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .letter-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(14px);
+      border: 2px solid #ff85c0;
+      border-radius: 24px;
+      max-width: 520px;
+      width: 100%;
+      margin: auto;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
+      animation: fadeInScale 0.8s ease;
+    }
+
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .photo-frame {
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto 20px auto;
+      border-radius: 20px;
+      padding: 6px;
+      background: linear-gradient(45deg, #ff2a85, #ffb3d9, #ff2a85);
+      box-shadow: 0 10px 25px rgba(255, 42, 133, 0.5);
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: auto;
+      border-radius: 15px;
+      display: block;
+      object-fit: cover;
+    }
+
+    .letter-card h2 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.6rem;
+      color: #ff99cc;
+      margin-bottom: 14px;
+    }
+
+    .letter-text {
+      font-size: 1.02rem;
+      line-height: 1.75;
+      color: #fff0f6;
+      text-align: center;
+    }
+
+    .letter-text strong {
+      color: #ff85c0;
+    }
+
+    /* Corações flutuando no fundo */
+    .bg-heart {
+      position: fixed;
+      bottom: -20px;
+      font-size: 20px;
+      animation: floatUp 6s linear infinite;
+      pointer-events: none;
+      z-index: 88;
+      opacity: 0.7;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(0.8); opacity: 0.8; }
+      100% { transform: translateY(-105vh) scale(1.3); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Player compacto do YouTube -->
+  <div id="player-container">
+    <div class="yt-music-box">
+      <div class="yt-music-title">🎵 Tocando: Melim - Ouvi Dizer</div>
+      <div class="yt-iframe-wrapper" id="yt-slot"></div>
+    </div>
+  </div>
+
+  <!-- Tela Inicial -->
+  <div id="start-screen">
+    <h1>UMA MISSÃO DO AMOR 💖</h1>
+    <p>AMOR MATE TODOS OS ZUMBIS E PASSE ATÉ 5 FASES E DESVENDRE O QUE EU FIZ PRA VOCÊ DE AMOR E CARINHO DEDICADO A VOCÊ</p>
+    <button type="button" class="btn-pink" id="start-btn">COMECE AGORA MO 💕</button>
+  </div>
+
+  <!-- Tela do Jogo -->
+  <div id="game-wrapper">
+    <div id="hud">
+      <div>Fase: <span class="hud-badge" id="level-display">1 / 5</span></div>
+      <div>Zumbis: <span id="zombies-display">0/0</span></div>
+    </div>
+
+    <canvas id="gameCanvas" width="800" height="450"></canvas>
+
+    <!-- Controles para Celular -->
+    <div id="mobile-controls">
+      <div class="ctrl-group">
+        <button type="button" class="ctrl-btn" id="btn-left">◀</button>
+        <button type="button" class="ctrl-btn" id="btn-right">▶</button>
+        <button type="button" class="ctrl-btn" id="btn-up">▲</button>
+      </div>
+      <button type="button" class="ctrl-btn shoot-btn" id="btn-shoot">💖 ATIRAR</button>
+    </div>
+  </div>
+
+  <!-- Carta Fechada Girando após a Fase 5 -->
+  <div id="envelope-overlay">
+    <h2>Você venceu todas as fases! 🎉</h2>
+    <div class="spinning-letter" id="letter-btn">💌</div>
+    <p class="tap-hint">Toque na carta girando para abrir ✨</p>
+  </div>
+
+  <!-- Declaração Final com a Foto -->
+  <div id="declaration-modal">
+    <div class="letter-card">
+      <div class="photo-frame">
+        <img src="foto.jpg" alt="Minha Princesa">
+      </div>
+      <h2>Eu Te Amo Muito! 💖</h2>
+      <p class="letter-text">
+        Meu amor, eu sou completamente apaixonado por você e completamente admirado por cada detalhe da sua beleza. Você é a mulher mais linda desse mundo inteiro — o seu sorriso ilumina tudo ao meu redor, os seus cachos são perfeitos e o seu olhar tem um brilho único que me encanta todos os dias.<br><br>
+        Além de ser essa mulher maravilhosamente linda por fora, eu admiro profundamente a sua <strong>fé</strong> e a sua <strong>força</strong>. Ver o jeito como você confia em Deus, enfrenta qualquer desafio de cabeça erguida e nunca desiste me faz ter ainda mais orgulho e admiração por você.<br><br>
+        Você é linda, forte, abençoada e o maior presente da minha vida. <strong>Eu te amo hoje e sempre!</strong> 💕
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let gameRunning = false;
+    let currentLevel = 1;
+    const maxLevels = 5;
+    let levelTransition = false;
+
+    const groundY = 350;
+
+    // Boneca com roupa rosa e pistola rosa
+    const player = {
+      x: 80,
+      y: groundY - 70,
+      w: 44,
+      h: 70,
+      vx: 0,
+      vy: 0,
+      speed: 4.5,
+      jumpPower: -12,
+      grounded: true,
+      facing: 1
+    };
+
+    let bullets = [];
+    let zombies = [];
+    let particles = [];
+    let zombiesToSpawn = 0;
+    let zombiesKilled = 0;
+    let totalZombiesInLevel = 0;
+    let spawnTimer = 0;
+
+    const keys = { left: false, right: false, up: false };
+
+    function startGame() {
+      if (gameRunning) return;
+      document.getElementById('start-screen').style.display = 'none';
+      document.getElementById('player-container').style.display = 'block';
+      document.getElementById('game-wrapper').style.display = 'flex';
+
+      const ytSlot = document.getElementById('yt-slot');
+      if (!ytSlot.innerHTML.trim()) {
+        ytSlot.innerHTML = `
+          <iframe
+            src="https://www.youtube.com/embed/y_6aSG2yfe8?autoplay=1&loop=1&playlist=y_6aSG2yfe8&controls=1&modestbranding=1&rel=0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
+          </iframe>
+        `;
+      }
+
+      startLevel(1);
+      gameRunning = true;
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Garante que o botão funcione tanto no toque do celular quanto no clique do mouse
+    const startBtn = document.getElementById('start-btn');
+    startBtn.addEventListener('click', startGame);
+    startBtn.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      startGame();
+    });
+
+    function startLevel(lvl) {
+      currentLevel = lvl;
+      bullets = [];
+      zombies = [];
+      zombiesKilled = 0;
+      totalZombiesInLevel = 3 + lvl * 2;
+      zombiesToSpawn = totalZombiesInLevel;
+      spawnTimer = 30;
+      updateHUD();
+    }
+
+    function updateHUD() {
+      document.getElementById('level-display').textContent = `${currentLevel} / ${maxLevels}`;
+      document.getElementById('zombies-display').textContent = `${zombiesKilled}/${totalZombiesInLevel}`;
+    }
+
+    function shootHeart() {
+      if (!gameRunning || levelTransition) return;
+      bullets.push({
+        x: player.facing === 1 ? player.x + player.w + 8 : player.x - 14,
+        y: player.y + 34,
+        vx: player.facing * 8.5,
+        size: 14
+      });
+    }
+
+    function spawnZombie() {
+      const speed = 1.1 + (currentLevel * 0.28) + Math.random() * 0.4;
+      zombies.push({
+        x: canvas.width + 20,
+        y: groundY - 68,
+        w: 42,
+        h: 68,
+        hp: currentLevel >= 4 ? 2 : 1,
+        speed: speed,
+        wobble: Math.random() * Math.PI * 2
+      });
+    }
+
+    function createExplosion(x, y) {
+      for (let i = 0; i < 10; i++) {
+        particles.push({
+          x,
+          y,
+          vx: (Math.random() - 0.5) * 6,
+          vy: (Math.random() - 0.5) * 6,
+          life: 30
+        });
+      }
+    }
+
+    function update() {
+      if (!gameRunning || levelTransition) return;
+
+      if (keys.left) {
+        player.vx = -player.speed;
+        player.facing = -1;
+      } else if (keys.right) {
+        player.vx = player.speed;
+        player.facing = 1;
+      } else {
+        player.vx = 0;
+      }
+
+      if (keys.up && player.grounded) {
+        player.vy = player.jumpPower;
+        player.grounded = false;
+      }
+
+      player.vy += 0.6;
+      player.x += player.vx;
+      player.y += player.vy;
+
+      if (player.x < 10) player.x = 10;
+      if (player.x + player.w > canvas.width - 10) player.x = canvas.width - player.w - 10;
+
+      if (player.y + player.h >= groundY) {
+        player.y = groundY - player.h;
+        player.vy = 0;
+        player.grounded = true;
+      }
+
+      if (zombiesToSpawn > 0) {
+        spawnTimer--;
+        if (spawnTimer <= 0) {
+          spawnZombie();
+          zombiesToSpawn--;
+          spawnTimer = Math.max(45, 110 - currentLevel * 12);
+        }
+      }
+
+      for (let i = bullets.length - 1; i >= 0; i--) {
+        const b = bullets[i];
+        b.x += b.vx;
+        if (b.x < -30 || b.x > canvas.width + 30) {
+          bullets.splice(i, 1);
+        }
+      }
+
+      for (let i = zombies.length - 1; i >= 0; i--) {
+        const z = zombies[i];
+        z.x -= z.speed;
+        z.wobble += 0.12;
+
+        for (let j = bullets.length - 1; j >= 0; j--) {
+          const b = bullets[j];
+          if (
+            b.x + 10 > z.x &&
+            b.x - 10 < z.x + z.w &&
+            b.y + 10 > z.y &&
+            b.y - 10 < z.y + z.h
+          ) {
+            bullets.splice(j, 1);
+            z.hp--;
+            createExplosion(z.x + z.w / 2, z.y + z.h / 2);
+            if (z.hp <= 0) {
+              zombies.splice(i, 1);
+              zombiesKilled++;
+              updateHUD();
+            }
+            break;
+          }
+        }
+
+        if (
+          z &&
+          player.x < z.x + z.w &&
+          player.x + player.w > z.x &&
+          player.y < z.y + z.h &&
+          player.y + player.h > z.y
+        ) {
+          z.x += 90;
+        }
+      }
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+
+      if (zombiesToSpawn === 0 && zombies.length === 0) {
+        if (currentLevel < maxLevels) {
+          levelTransition = true;
+          setTimeout(() => {
+            startLevel(currentLevel + 1);
+            levelTransition = false;
+          }, 1200);
+        } else {
+          gameRunning = false;
+          document.getElementById('envelope-overlay').style.display = 'flex';
+        }
+      }
+    }
+
+    function drawHeart(x, y, size, color) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      const topCurveHeight = size * 0.3;
+      ctx.moveTo(0, topCurveHeight);
+      ctx.bezierCurveTo(0, 0, -size / 2, 0, -size / 2, topCurveHeight);
+      ctx.bezierCurveTo(-size / 2, (size + topCurveHeight) / 2, 0, (size + topCurveHeight) / 1.2, 0, size);
+      ctx.bezierCurveTo(0, (size + topCurveHeight) / 1.2, size / 2, (size + topCurveHeight) / 2, size / 2, topCurveHeight);
+      ctx.bezierCurveTo(size / 2, 0, 0, 0, 0, topCurveHeight);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawPlayer() {
+      const { x, y, w, h, facing } = player;
+      ctx.save();
+
+      // Cabelo cacheado escuro
+      ctx.fillStyle = '#1b0f14';
+      ctx.beginPath();
+      ctx.arc(x + w / 2, y + 16, 17, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillRect(x + 6, y + 14, 32, 24);
+
+      // Rosto
+      ctx.fillStyle = '#e0a988';
+      ctx.beginPath();
+      ctx.arc(x + w / 2, y + 17, 12, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Olhos
+      ctx.fillStyle = '#111';
+      const eyeOffset = facing === 1 ? 4 : -4;
+      ctx.beginPath();
+      ctx.arc(x + w / 2 + eyeOffset, y + 16, 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Roupa Rosa
+      ctx.fillStyle = '#ff2a85';
+      ctx.beginPath();
+      ctx.moveTo(x + 12, y + 29);
+      ctx.lineTo(x + 32, y + 29);
+      ctx.lineTo(x + 38, y + 54);
+      ctx.lineTo(x + 6, y + 54);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = '#ff99cc';
+      ctx.fillRect(x + 13, y + 39, 18, 4);
+
+      // Pernas
+      ctx.fillStyle = '#e0a988';
+      ctx.fillRect(x + 14, y + 54, 6, 16);
+      ctx.fillRect(x + 24, y + 54, 6, 16);
+
+      // Sapatinho Rosa
+      ctx.fillStyle = '#ff69b4';
+      ctx.fillRect(x + 12, y + 66, 9, 5);
+      ctx.fillRect(x + 23, y + 66, 9, 5);
+
+      // Pistola Rosa
+      ctx.fillStyle = '#ff69b4';
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1.5;
+      if (facing === 1) {
+        ctx.fillRect(x + 30, y + 33, 18, 7);
+        ctx.strokeRect(x + 30, y + 33, 18, 7);
+        ctx.fillRect(x + 30, y + 38, 6, 8);
+      } else {
+        ctx.fillRect(x - 4, y + 33, 18, 7);
+        ctx.strokeRect(x - 4, y + 33, 18, 7);
+        ctx.fillRect(x + 8, y + 38, 6, 8);
+      }
+
+      ctx.restore();
+    }
+
+    function drawZombie(z) {
+      ctx.save();
+      const sway = Math.sin(z.wobble) * 2;
+
+      ctx.fillStyle = '#4a5568';
+      ctx.fillRect(z.x + 8, z.y + 26, 26, 28);
+
+      ctx.fillStyle = '#68d391';
+      ctx.beginPath();
+      ctx.arc(z.x + z.w / 2 + sway, z.y + 15, 13, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#ff4d4d';
+      ctx.fillRect(z.x + 13 + sway, z.y + 12, 4, 4);
+      ctx.fillRect(z.x + 21 + sway, z.y + 12, 4, 4);
+
+      ctx.fillStyle = '#68d391';
+      ctx.fillRect(z.x - 4, z.y + 29, 16, 6);
+
+      ctx.fillStyle = '#2d3748';
+      ctx.fillRect(z.x + 11, z.y + 54, 7, 14);
+      ctx.fillRect(z.x + 23, z.y + 54, 7, 14);
+
+      ctx.restore();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = '#ff69b4';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(0, groundY);
+      ctx.lineTo(canvas.width, groundY);
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(255, 182, 193, 0.15)';
+      ctx.beginPath();
+      ctx.arc(680, 90, 45, 0, Math.PI * 2);
+      ctx.fill();
+
+      drawPlayer();
+
+      bullets.forEach(b => {
+        drawHeart(b.x, b.y - 7, b.size, '#ff2a85');
+      });
+
+      zombies.forEach(drawZombie);
+
+      particles.forEach(p => {
+        drawHeart(p.x, p.y, 10, '#ff85c0');
+      });
+
+      if (levelTransition) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#ff99cc';
+        ctx.font = 'bold 34px Poppins';
+        ctx.textAlign = 'center';
+        ctx.fillText(`Fase ${currentLevel} Concluída! 💖`, canvas.width / 2, canvas.height / 2);
+      }
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      if (gameRunning) {
+        requestAnimationFrame(gameLoop);
+      }
+    }
+
+    let heartsStarted = false;
+    function openLetter() {
+      document.getElementById('envelope-overlay').style.display = 'none';
+      document.getElementById('declaration-modal').style.display = 'flex';
+      if (!heartsStarted) {
+        heartsStarted = true;
+        setInterval(() => {
+          const heart = document.createElement('div');
+          heart.className = 'bg-heart';
+          heart.textContent = '💖';
+          heart.style.left = Math.random() * 100 + 'vw';
+          heart.style.animationDuration = (4 + Math.random() * 3) + 's';
+          document.body.appendChild(heart);
+          setTimeout(() => heart.remove(), 7000);
+        }, 450);
+      }
+    }
+
+    const letterBtn = document.getElementById('letter-btn');
+    letterBtn.addEventListener('click', openLetter);
+    letterBtn.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      openLetter();
+    });
+
+    window.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = true;
+      if (e.key === 'ArrowRight' || e.key === 'd') keys.right = true;
+      if (e.key === 'ArrowUp' || e.key === 'w') keys.up = true;
+      if (e.key === ' ' || e.key === 'Enter') shootHeart();
+    });
+
+    window.addEventListener('keyup', e => {
+      if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = false;
+      if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
+      if (e.key === 'ArrowUp' || e.key === 'w') keys.up = false;
+    });
+
+    function bindTouch(id, keyName) {
+      const el = document.getElementById(id);
+      el.addEventListener('touchstart', e => { e.preventDefault(); keys[keyName] = true; });
+      el.addEventListener('touchend', e => { e.preventDefault(); keys[keyName] = false; });
+      el.addEventListener('mousedown', () => keys[keyName] = true);
+      el.addEventListener('mouseup', () => keys[keyName] = false);
+      el.addEventListener('mouseleave', () => keys[keyName] = false);
+    }
+
+    bindTouch('btn-left', 'left');
+    bindTouch('btn-right', 'right');
+    bindTouch('btn-up', 'up');
+
+    const shootBtn = document.getElementById('btn-shoot');
+    shootBtn.addEventListener('touchstart', e => { e.preventDefault(); shootHeart(); });
+    shootBtn.addEventListener('click', shootHeart);
+  </script>
+</body>
+</html>
