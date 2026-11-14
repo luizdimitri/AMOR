@@ -79,8 +79,8 @@
       transform: scale(0.95);
     }
 
-    /* Players ocultos do YouTube que rodam em segundo plano */
-    .hidden-yt-players {
+    /* Player oculto para o jogo */
+    .hidden-yt-player {
       position: fixed;
       top: -9999px;
       left: -9999px;
@@ -252,7 +252,7 @@
       margin: auto;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 18px;
       animation: fadeInScale 0.8s ease;
     }
 
@@ -261,89 +261,42 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    /* Players de Música Estilizados */
-    .music-player-box {
+    /* Estilo igualzinho ao da imagem que você mandou (Player Compacto do YouTube) */
+    .yt-player-box {
       width: 100%;
       background: rgba(36, 12, 26, 0.94);
       border: 1px solid rgba(255, 133, 192, 0.4);
       border-radius: 18px;
-      padding: 12px 16px;
+      padding: 10px 14px 12px 14px;
       text-align: center;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     }
 
-    .music-player-box.inner-player {
-      margin-bottom: 18px;
-      background: rgba(24, 6, 16, 0.92);
-    }
-
-    .music-player-title {
-      font-size: 0.92rem;
+    .yt-player-title {
+      font-size: 0.88rem;
       font-weight: 600;
       color: #ff85c0;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
     }
 
-    .custom-audio-bar {
-      background: #0d0d0d;
+    .yt-iframe-container {
+      width: 100%;
+      height: 74px;
       border-radius: 14px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
-    .play-pause-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: #ff2a85;
+    .yt-iframe-container iframe {
+      width: 100%;
+      height: 100%;
       border: none;
-      color: #fff;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      touch-action: manipulation;
-    }
-
-    .track-info {
-      flex: 1;
-      text-align: left;
-      overflow: hidden;
-    }
-
-    .track-name {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .track-artist {
-      font-size: 0.75rem;
-      color: #bbb;
-      margin-bottom: 5px;
-    }
-
-    .yt-badge {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #fff;
-      background: #ff0000;
-      padding: 3px 7px;
-      border-radius: 6px;
-      flex-shrink: 0;
+      display: block;
     }
 
     .letter-card {
@@ -427,12 +380,8 @@
 </head>
 <body>
 
-  <!-- Players do YouTube embutidos para cada parte do site -->
-  <div class="hidden-yt-players">
-    <div id="yt-game-player"></div>
-    <div id="yt-dec1-player"></div>
-    <div id="yt-dec2-player"></div>
-  </div>
+  <!-- Player oculto para a trilha do jogo -->
+  <div class="hidden-yt-player" id="yt-game-slot"></div>
 
   <!-- Tela Inicial -->
   <div id="start-screen">
@@ -458,7 +407,7 @@
         <button type="button" class="ctrl-btn" id="btn-right">▶</button>
         <button type="button" class="ctrl-btn" id="btn-up">▲</button>
       </div>
-      <button type="button" class="ctrl-btn shoot-btn" id="btn-shoot">💖 ATIRAR</button>
+      <button type="button" class="ctrl-btn shoot-btn" id="btn-shoot">🎵 ATIRAR</button>
     </div>
   </div>
 
@@ -469,21 +418,14 @@
     <p class="tap-hint">Toque na carta girando para abrir ✨</p>
   </div>
 
-  <!-- Declaração Final com as 2 Fotos e as Músicas correspondentes -->
+  <!-- Declaração Final com as 2 Fotos e os Players do YouTube Estilo a Imagem -->
   <div id="declaration-modal">
     <div class="letter-wrapper">
 
-      <!-- Player 1: Música da Primeira Declaração (Link 2: vaXCSYva2FM) -->
-      <div class="music-player-box">
-        <div class="music-player-title">🎵 Tocando: Música Especial 1</div>
-        <div class="custom-audio-bar">
-          <button type="button" class="play-pause-btn" id="dec1-play-btn" onclick="toggleDec1Music()">▶</button>
-          <div class="track-info">
-            <div class="track-name">Primeira Declaração</div>
-            <div class="track-artist">Trilha Sonora Especial</div>
-          </div>
-          <div class="yt-badge">▶ YouTube</div>
-        </div>
+      <!-- Player do YouTube 1 (Música da 1ª Declaração: vaXCSYva2FM) -->
+      <div class="yt-player-box">
+        <div class="yt-player-title">🎵 Tocando: Primeira Declaração Especial</div>
+        <div class="yt-iframe-container" id="yt-dec1-slot"></div>
       </div>
 
       <div class="letter-card">
@@ -501,17 +443,10 @@
 
         <div class="divider-hearts">💕 💖 💕</div>
 
-        <!-- Player 2: Música da Segunda Declaração (Link 3: Q4Sn5hOewbs) -->
-        <div class="music-player-box inner-player">
-          <div class="music-player-title">🎵 Tocando: Música da Foto 2</div>
-          <div class="custom-audio-bar">
-            <button type="button" class="play-pause-btn" id="dec2-play-btn" onclick="toggleDec2Music()">▶</button>
-            <div class="track-info">
-              <div class="track-name">Segunda Declaração</div>
-              <div class="track-artist">Trilha Sonora Especial</div>
-            </div>
-            <div class="yt-badge">▶ YouTube</div>
-          </div>
+        <!-- Player do YouTube 2 (Música da 2ª Declaração: Q4Sn5hOewbs) -->
+        <div class="yt-player-box inner-player">
+          <div class="yt-player-title">🎵 Tocando: Música da Foto 2</div>
+          <div class="yt-iframe-container" id="yt-dec2-slot"></div>
         </div>
 
         <!-- Foto 2 -->
@@ -532,23 +467,21 @@
     </div>
   </div>
 
-  <!-- Carrega a API oficial do YouTube IFrame -->
+  <!-- API do YouTube -->
   <script src="https://www.youtube.com/iframe_api"></script>
 
   <script>
-    // IDs extraídos dos seus links do YouTube:
-    // Jogo: I0e7Ugl0FRo (https://youtu.be/I0e7Ugl0FRo)
-    // Declaração 1: vaXCSYva2FM (https://youtu.be/vaXCSYva2FM)
-    // Declaração 2: Q4Sn5hOewbs (https://youtu.be/Q4Sn5hOewbs)
+    // IDs extraídos dos links:
+    // Jogo: I0e7Ugl0FRo
+    // Declaração 1: vaXCSYva2FM
+    // Declaração 2: Q4Sn5hOewbs
 
     let gamePlayer = null;
-    let dec1Player = null;
-    let dec2Player = null;
     let wantGameMusic = false;
 
     function onYouTubeIframeAPIReady() {
-      // 1) Player do Jogo
-      gamePlayer = new YT.Player('yt-game-player', {
+      // Player do Jogo (Oculto rodando em segundo plano)
+      gamePlayer = new YT.Player('yt-game-slot', {
         height: '200',
         width: '200',
         videoId: 'I0e7Ugl0FRo',
@@ -557,36 +490,6 @@
           onReady: function(e) {
             e.target.setVolume(70);
             if (wantGameMusic) e.target.playVideo();
-          }
-        }
-      });
-
-      // 2) Player da Declaração 1
-      dec1Player = new YT.Player('yt-dec1-player', {
-        height: '200',
-        width: '200',
-        videoId: 'vaXCSYva2FM',
-        playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: 'vaXCSYva2FM', playsinline: 1, rel: 0 },
-        events: {
-          onStateChange: function(e) {
-            const btn = document.getElementById('dec1-play-btn');
-            if (e.data === YT.PlayerState.PLAYING) btn.textContent = '❚❚';
-            else if (e.data === YT.PlayerState.PAUSED) btn.textContent = '▶';
-          }
-        }
-      });
-
-      // 3) Player da Declaração 2
-      dec2Player = new YT.Player('yt-dec2-player', {
-        height: '200',
-        width: '200',
-        videoId: 'Q4Sn5hOewbs',
-        playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: 'Q4Sn5hOewbs', playsinline: 1, rel: 0 },
-        events: {
-          onStateChange: function(e) {
-            const btn = document.getElementById('dec2-play-btn');
-            if (e.data === YT.PlayerState.PLAYING) btn.textContent = '❚❚';
-            else if (e.data === YT.PlayerState.PAUSED) btn.textContent = '▶';
           }
         }
       });
@@ -620,38 +523,6 @@
           } else {
             gamePlayer.playVideo();
             btn.textContent = '🔊 Som';
-          }
-        }
-      } catch (e) {}
-    }
-
-    function toggleDec1Music() {
-      const btn = document.getElementById('dec1-play-btn');
-      try {
-        if (dec1Player && typeof dec1Player.getPlayerState === 'function') {
-          if (dec1Player.getPlayerState() === 1) {
-            dec1Player.pauseVideo();
-            btn.textContent = '▶';
-          } else {
-            if (dec2Player && typeof dec2Player.pauseVideo === 'function') dec2Player.pauseVideo();
-            dec1Player.playVideo();
-            btn.textContent = '❚❚';
-          }
-        }
-      } catch (e) {}
-    }
-
-    function toggleDec2Music() {
-      const btn = document.getElementById('dec2-play-btn');
-      try {
-        if (dec2Player && typeof dec2Player.getPlayerState === 'function') {
-          if (dec2Player.getPlayerState() === 1) {
-            dec2Player.pauseVideo();
-            btn.textContent = '▶';
-          } else {
-            if (dec1Player && typeof dec1Player.pauseVideo === 'function') dec1Player.pauseVideo();
-            dec2Player.playVideo();
-            btn.textContent = '❚❚';
           }
         }
       } catch (e) {}
@@ -1010,7 +881,7 @@
       }
     }
 
-    // === Abrir Carta e Tocar Primeira Música ===
+    // === Abrir Carta e Inserir os Players do YouTube na Declaração ===
     let heartsStarted = false;
 
     function openLetter() {
@@ -1018,12 +889,14 @@
       document.getElementById('envelope-overlay').style.display = 'none';
       document.getElementById('declaration-modal').style.display = 'flex';
 
-      try {
-        if (dec1Player && typeof dec1Player.playVideo === 'function') {
-          dec1Player.playVideo();
-          document.getElementById('dec1-play-btn').textContent = '❚❚';
-        }
-      } catch (e) {}
+      // Insere os iframes do YouTube diretamente nas caixinhas de player da declaração
+      document.getElementById('yt-dec1-slot').innerHTML = `
+        <iframe src="https://www.youtube.com/embed/vaXCSYva2FM?autoplay=1&loop=1&playlist=vaXCSYva2FM&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      `;
+
+      document.getElementById('yt-dec2-slot').innerHTML = `
+        <iframe src="https://www.youtube.com/embed/Q4Sn5hOewbs?autoplay=1&loop=1&playlist=Q4Sn5hOewbs&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      `;
 
       if (!heartsStarted) {
         heartsStarted = true;
